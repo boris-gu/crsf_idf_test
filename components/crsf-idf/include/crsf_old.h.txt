@@ -1,0 +1,148 @@
+#pragma once
+
+#include <driver/uart.h>
+
+// DEST
+#define CRSF_ADDRESS_BROADCAS 0x00
+#define CRSF_ADDRESS_CRSF_TRANSMITTER 0xEE
+#define CRSF_ADDRESS_RADIO_TRANSMITTER 0xEA
+#define CRSF_ADDRESS_FLIGHT_CONTROLLER 0xC8
+#define CRSF_ADDRESS_CRSF_RECEIVER 0xEC
+
+// LEN
+#define CRSF_PAYLOAD_MAX_LEN 60
+
+// TYPE
+#define CRSF_FRAMETYPE_LINK_STATISTICS 0x14
+#define CRSF_FRAMETYPE_RC_CHANNELS 0x16
+#define CRSF_FRAMETYPE_DEVICE_PING 0x28
+#define CRSF_FRAMETYPE_DEVICE_INFO 0x29
+#define CRSF_FRAMETYPE_PARAMETER_SETTINGS_ENTRY 0x2B
+#define CRSF_FRAMETYPE_PARAMETER_READ 0x2C
+#define CRSF_FRAMETYPE_PARAMETER_WRITE 0x2D
+#define CRSF_FRAMETYPE_COMMAND 0x32
+
+// CRC
+// #define POLY 0xD5
+
+struct crsf_default {
+  uint8_t dest;
+  uint8_t len;
+  uint8_t type;
+  uint8_t payload[CRSF_PAYLOAD_MAX_LEN];
+  uint8_t crc8;
+};
+
+
+// 0x14 CRSF_FRAMETYPE_LINK_STATISTICS
+struct crsf_link_statistics {
+  uint8_t dest;
+  uint8_t len;
+  uint8_t type;
+
+  uint8_t ul_rssi_1;                 // dBm * -1
+  uint8_t ul_rssi_2;                 // dBm * -1
+  uint8_t ul_link_quality;           // %
+  int8_t ul_snr;                     // dB
+  uint8_t diversity_active_antenna;  // enum ant. 1 = 0, ant. 2
+  uint8_t rf_mode;                   // 500Hz, 250Hz etc, varies based on ELRS Band or TBS
+  uint8_t ul_tx_power;               // enum 0mW = 0, 10mW, 25 mW, 100 mW, 500 mW,
+                                     //               1000 mW, 2000mW, 50mW
+  uint8_t dl_rssi;                   // dBm * -1
+  uint8_t dl_link_quality;           // %
+  int8_t dl_snr;                     // dB
+  
+  uint8_t crc8;
+};
+
+/* \var bbb test */
+int bbb;
+
+/** \struct
+ * \brief 0x16 CRSF_FRAMETYPE_RC_CHANNELS.
+ * @var sf_rc_channels::dest TESTDEST
+ * @var sf_rc_channels::len TESTDEST
+ * @var sf_rc_channels::type TESTDEST
+ * @var sf_rc_channels::type TESTDEST
+ * @var sf_rc_channels::type TESTDEST
+ */
+typedef struct{
+  uint8_t dest; /**< ntcnntc*/
+  uint8_t len;
+  uint8_t type;
+
+  uint16_t ch[16];  // TODO: сделать нормально
+  
+  uint8_t crc8;
+} crsf_rc_channels;
+
+// 0x28 CRSF_FRAMETYPE_DEVICE_PING
+// [ 0xEE, 0x04, 0x28, 0x00, 0xEA, 0x54 ];
+struct crsf_device_ping {
+  uint8_t dest;
+  uint8_t len;
+  uint8_t type;
+  
+  uint8_t ext_dest;  // 0x00 Extended destination
+  uint8_t ext_src;   // 0xEA Extended source
+  
+  uint8_t crc8;
+}
+
+// 0x29 CRSF_FRAMETYPE_DEVICE_INFO
+struct crsf_device_ping_response {
+  uint8_t dest;
+  uint8_t len;
+  uint8_t type;
+  
+  uint8_t ext_dest;  // 0xEA Extended destination
+  uint8_t ext_src;   // 0xEE Extended source
+
+  uint8_t name[10];    // Display name, null terminated string
+  uint8_t serial_num;  // Serial number, always "ELRS" [0x45, 0x4C, 0x52, 0x53]
+                       // for ExpressLRS
+  uint8_t hw_ver[4];   // Hardware version
+  uint8_t sw_ver[4];   // Software version, all 00 for ELRSv2, 00 MAJ MIN REV for
+                       // ELRSv3
+  uint8_t num_of_param;        // 0x13 Number of config parameters
+  uint8_t param_protocol_ver;  // Parameter protocol version
+  
+  uint8_t crc8;
+}
+
+/* [
+  0xEA, 0x1C, 0x29, 0xEA, 0xEE, 0x53, 0x49, 0x59, 0x49, 0x20, 0x46, 0x4D, 0x33,
+0x30, 0x00, 0x45, 0x4C, 0x52, 0x53, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+0x00, 0x13, 0x00, 0xCA
+]; */
+
+// XXX: OLD
+// [dest] [len] [type] [payload] [crc8]
+class CRSF {
+ private:
+  uart_port_t port;
+  crsf_default rxtx;
+
+  uint8_t crc8_calc(crsf_default *pkt);
+  // RX
+  bool dest_check();
+  bool len_check();
+  bool type_check();
+  bool crc8_check();
+
+ public:
+  CRSF();
+  CRSF(uart_port_t port);
+  bool set_port(uart_port_t port);
+  // TX
+  bool send_rc_channels(crsf_rc_channels channels, bool to_ticks = false);
+  // RX
+  bool read_pkt();
+  uint8_t get_pkt_type();
+  bool get_default_packet(crsf_default *pkt);
+  bool get_rc_channels(crsf_rc_channels *pkt, bool to_us = false);
+};
+
+uint16_t ticks2us(uint16_t value);
+uint16_t us2ticks(uint16_t value);
+z
