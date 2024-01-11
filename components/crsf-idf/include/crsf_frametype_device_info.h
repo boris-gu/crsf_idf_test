@@ -18,7 +18,6 @@ typedef struct {
   uint8_t ext_dest; // 0xEA CRSF_ADDRESS_RADIO_TRANSMITTER 
   uint8_t ext_src;  // 0xEE CRSF_ADDRESS_CRSF_TRANSMITTER
   char display_name[CRSF_DISPLAY_NAME_MAX_LEN]; // null terminated string
-  uint8_t display_name_len; // TODO: сделать с нижним подчеркиванием?
   uint32_t serial_num; // always "ELRS" for ExpressLRS
   uint32_t hard_ver;
   uint32_t soft_ver;
