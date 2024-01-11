@@ -5,7 +5,9 @@
 #pragma once
 
 #include <stdio.h>
-#include "crsf.h"
+#include "crsf_frametype_default.h"
+
+#define CRSF_FRAMETYPE_BATTERY_SENSOR 0x08
 
 typedef struct {
   uint8_t sync;

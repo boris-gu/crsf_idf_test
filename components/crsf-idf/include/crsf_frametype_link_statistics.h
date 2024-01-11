@@ -6,7 +6,9 @@
 #pragma once
 
 #include <stdio.h>
-#include "crsf.h"
+#include "crsf_frametype_default.h"
+
+#define CRSF_FRAMETYPE_LINK_STATISTICS 0x14
 
 typedef struct {
   uint8_t sync;

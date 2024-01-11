@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-
 /**
  * CRSF_SYNC
  * https://github.com/crsf-wg/crsf/wiki/CRSF-Addresses
@@ -30,21 +28,9 @@
 #define CRSF_PKT_LEN (CRSF_PAYLOAD_MAX_LEN + 4)
 
 /**
- * CRSF_TYPE
+ * CRSF_TYPE (Unrealized)
  * https://github.com/crsf-wg/crsf/wiki/Packet-Types
  */
-#define CRSF_FRAMETYPE_GPS 0x02
-#define CRSF_FRAMETYPE_VARIO 0x07
-#define CRSF_FRAMETYPE_BATTERY_SENSOR 0x08
-#define CRSF_FRAMETYPE_BARO_ALTITUDE 0x09
-#define CRSF_FRAMETYPE_HEARTBEAT 0x0B
-#define CRSF_FRAMETYPE_LINK_STATISTICS 0x14
-#define CRSF_FRAMETYPE_RC_CHANNELS_PACKED 0x16
-#define CRSF_FRAMETYPE_SUBSET_RC_CHANNELS_PACKED 0x17
-#define CRSF_FRAMETYPE_LINK_RX_ID 0x1C
-#define CRSF_FRAMETYPE_LINK_TX_ID 0x1D
-#define CRSF_FRAMETYPE_ATTITUDE 0x1E
-#define CRSF_FRAMETYPE_FLIGHT_MODE 0x21
 #define CRSF_FRAMETYPE_DEVICE_PING 0x28
 #define CRSF_FRAMETYPE_DEVICE_INFO 0x29
 #define CRSF_FRAMETYPE_PARAMETER_SETTINGS_ENTRY 0x2B
@@ -65,11 +51,3 @@
  * CRC
  */
 // #define POLY 0xD5
-
-typedef struct {
-  uint8_t sync;
-  uint8_t len;
-  uint8_t type;
-  uint8_t payload[CRSF_PAYLOAD_MAX_LEN];
-  uint8_t crc8;
-} crsf_default;
