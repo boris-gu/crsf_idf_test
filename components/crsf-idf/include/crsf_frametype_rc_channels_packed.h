@@ -1,6 +1,5 @@
 /**
  * Channels data (both handset to TX and RX to flight controller)
- * https://github.com/crsf-wg/crsf/wiki/CRSF_FRAMETYPE_RC_CHANNELS_PACKED
  */
 #pragma once
 
