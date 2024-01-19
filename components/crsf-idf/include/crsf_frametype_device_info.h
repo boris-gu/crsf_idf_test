@@ -11,7 +11,7 @@
 
 typedef struct {
   uint8_t sync;
-  uint8_t len; // TODO: оставить или ввести display_name_len
+  //uint8_t len;
   // uint8_t type;
 
   uint8_t ext_dest; // 0xEA CRSF_ADDRESS_RADIO_TRANSMITTER 
