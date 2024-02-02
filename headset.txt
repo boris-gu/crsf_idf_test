@@ -1,6 +1,14 @@
 00 -----------------------------------------------?? 
 ea 0d 3a ea ee 10 00 01 04 64 00 00 01 54 40
-c8 08 32 ee ea 10 05 36 26
+3a - CRSF_FRAMETYPE_RADIO_ID
+ea ee - из передатчика в пульт
+10 - подтип CRSF_FRAMETYPE_OPENTX_SYNC
+00 01 04 64 -  Request channels packets be sent this often (us * 10)???
+  150 Гц = 6666.66 DEC = 66660 = 10464 HEX
+  00 00 01 54 - Request a phase adjustment to line up channels packet reception with the module's OTA timer
+
+
+c8 08 32 ee ea 10 05 36 26 - задаем model id
 a0 -----------------------------------------------??
 ea 0d 3a ea ee 10 00 01 04 64 ff ff f6 f0 75
 ea 0d 3a ea ee 10 00 01 04 64 ff ff 1e b0 11
