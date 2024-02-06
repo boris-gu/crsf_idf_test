@@ -3,10 +3,8 @@
  */
 #pragma once
 
-#include <stdio.h>
 #include "crsf_frametype_default.h"
 
-#define CRSF_FRAMETYPE_DEVICE_INFO 0x29
 #define CRSF_DISPLAY_NAME_MAX_LEN (CRSF_PAYLOAD_MAX_LEN - 16)
 
 typedef struct {
@@ -23,9 +21,9 @@ typedef struct {
   uint8_t conf_param_count;   // XXX: 19?
   uint8_t param_protocol_ver; // 0x00
 
-  uint8_t crc8;
+  // uint8_t crc8;
 } crsf_device_info;
 
-crsf_device_info crsf_default2device_info(crsf_default pkt);
+crsf_device_info crsf_default2device_info(crsf_default* pkt);
 
-int crsf_device_info2array(crsf_device_info in_pkt, uint8_t* out_pkt);
+int crsf_device_info2array(crsf_device_info* in_pkt, uint8_t* out_pkt);

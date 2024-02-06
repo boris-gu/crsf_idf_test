@@ -1,7 +1,6 @@
 #include <driver/gpio.h>
 #include <driver/uart.h>
 #include <freertos/timers.h>
-#include "crsf.h"
 
 #define UART_BAUDRATE 115200
 #define UART2_TX GPIO_NUM_17
@@ -20,16 +19,13 @@ void app_main(void) {
   init_uart(UART_NUM_0, UART_SIGNAL_INV_DISABLE, UART_BAUDRATE,
             UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
   init_uart(UART_NUM_2, UART2_INV, UART_BAUDRATE, UART2_TX, UART2_RX);
-  uint8_t buff;
-  crsf_default elrs_def;
-  uint8_t rx_status = READ_SYNC;
+  uint8_t buff[UART_BUFF_LEN];
+  size_t data_len = 0;
   while (true) {
-    if (uart_read_bytes(UART_NUM_2, &buff, 1, 10 / portTICK_PERIOD_MS) >= 1) {
-      if (crsf_parse_char(buff, &elrs_def, &rx_status)){
-        if (elrs_def.type == CRSF_FRAMETYPE_RADIO_ID){
-          printf("SYNC\n");
-        }
-      }
+    data_len = uart_read_bytes(UART_NUM_2, buff, UART_BUFF_LEN,
+                               10 / portTICK_PERIOD_MS);
+    if (data_len > 0) {
+      uart_write_bytes(UART_NUM_0, buff, data_len);
     }
     // Раскомментировать, если что-то идет не так
     // vTaskDelay(1 / portTICK_PERIOD_MS);

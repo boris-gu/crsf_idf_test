@@ -3,10 +3,8 @@
  */
 #pragma once
 
-#include <stdio.h>
 #include "crsf_frametype_default.h"
 
-#define CRSF_FRAMETYPE_PARAMETER_SETTINGS_ENTRY 0x2B
 /**
  * TYPE
  */
@@ -34,9 +32,9 @@ typedef struct {
   uint8_t type;
   // TODO: ДОПИСАТЬ
 
-  uint8_t crc8;
+  // uint8_t crc8;
 } crsf_parameter_settings_entry;
 
-//crsf_parameter_settings_entry crsf_default2parameter_settings_entry(crsf_default pkt);
+//crsf_parameter_settings_entry crsf_default2parameter_settings_entry(crsf_default* pkt);
 
-//int crsf_parameter_settings_entry2array(crsf_parameter_settings_entry in_pkt, uint8_t* out_pkt);
+//int crsf_parameter_settings_entry2array(crsf_parameter_settings_entry* in_pkt, uint8_t* out_pkt);

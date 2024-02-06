@@ -3,10 +3,7 @@
  */
 #pragma once
 
-#include <stdio.h>
 #include "crsf_frametype_default.h"
-
-#define CRSF_FRAMETYPE_DEVICE_PING 0x28
 
 typedef struct {
   uint8_t sync; // 0xEE CRSF_ADDRESS_CRSF_TRANSMITTER
@@ -16,9 +13,9 @@ typedef struct {
   uint8_t ext_dest; // 0x00 CRSF_ADDRESS_BROADCAST 
   uint8_t ext_src;  // 0xEA CRSF_ADDRESS_RADIO_TRANSMITTER 
 
-  uint8_t crc8;
+  // uint8_t crc8;
 } crsf_device_ping;
 
-crsf_device_ping crsf_default2device_ping(crsf_default pkt);
+crsf_device_ping crsf_default2device_ping(crsf_default* pkt);
 
-int crsf_device_ping2array(crsf_device_ping in_pkt, uint8_t* out_pkt);
+int crsf_device_ping2array(crsf_device_ping* in_pkt, uint8_t* out_pkt);

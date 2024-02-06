@@ -1,2 +1,2 @@
-idf_component_register(SRCS "crsf_frametype_rc_channels_packed.c" "main.c"
+idf_component_register(SRCS "main.c"
                     INCLUDE_DIRS ".")

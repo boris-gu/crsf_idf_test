@@ -12,16 +12,16 @@ typedef enum {
   CRSF_ADDRESS_CRSF_RECEIVER = 0xEC,
   CRSF_ADDRESS_CRSF_TRANSMITTER = 0xEE,
   CRSF_ADDRESS_ELRS_LUA = 0xEF
-};
+} crsf_address;
 
 /**
  * CRSF_LEN
  */
 typedef enum {
   CRSF_PAYLOAD_MAX_LEN = 60,
-  CRSF_LEN_MAX = (CRSF_PAYLOAD_MAX_LEN + 2),
+  CRSF_LEN_MAX_VALUE = (CRSF_PAYLOAD_MAX_LEN + 2),
   CRSF_PKT_MAX_LEN = (CRSF_PAYLOAD_MAX_LEN + 4)
-};
+} crsf_payload;
 
 /**
  * CRSF_FRAMETYPE
@@ -35,7 +35,7 @@ typedef enum {
   CRSF_FRAMETYPE_PARAMETER_READ = 0x2C,
   CRSF_FRAMETYPE_PARAMETER_WRITE = 0x2D,
   CRSF_FRAMETYPE_COMMAND = 0x32,
-  CRSF_FRAMETYPE_RADIO_ID = 0x3A
-};
+  CRSF_FRAMETYPE_RADIO_ID = 0x3A // XXX: Не написан .h
+} crsf_frametype; 
 
 // #define POLY 0xD5

@@ -4,10 +4,7 @@
  */
 #pragma once
 
-#include <stdio.h>
 #include "crsf_frametype_default.h"
-
-#define CRSF_FRAMETYPE_LINK_STATISTICS 0x14
 
 typedef struct {
   uint8_t sync;
@@ -26,9 +23,9 @@ typedef struct {
   uint8_t down_quality; // Downlink package success rate / Link quality ( % )
   int8_t down_snr;      // Downlink SNR ( dB )
 
-  uint8_t crc8;
+  //uint8_t crc8;
 } crsf_link_statistics;
 
-crsf_link_statistics crsf_default2link_statistics(crsf_default pkt);
+crsf_link_statistics crsf_default2link_statistics(crsf_default* pkt);
 
-int crsf_link_statistics2array(crsf_link_statistics in_pkt, uint8_t* out_pkt);
+int crsf_link_statistics2array(crsf_link_statistics* in_pkt, uint8_t* out_pkt);

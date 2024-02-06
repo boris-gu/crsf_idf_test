@@ -1,13 +1,13 @@
 #pragma once
 
-#include "crsf_common.h"
+#include "crsf_enum.h"
 #include "crsf_frametype_default.h"
-
-typedef enum {
-  READ_SYNC = CRSF_PAYLOAD_MAX_LEN,
-  READ_LEN,
-  READ_TYPE,
-  READ_CRC8
-} read_status;
-
-uint8_t crsf_parse_char(uint8_t rx_byte, crsf_default* rx_pkt, uint8_t* rx_status);
+//#include "crsf_frametype_link_statistics.h"
+#include "crsf_frametype_rc_channels_packed.h"
+//#include "crsf_frametype_device_ping.h"
+//#include "crsf_frametype_device_info.h"
+//#include "crsf_frametype_parameter_settings_entry.h"
+//#include "crsf_frametype_parameter_read.h"
+//#include "crsf_frametype_parameter_write.h"
+#include "crsf_frametype_command.h"
+//#include "crsf_frametype_radio_id.h"
