@@ -1,28 +1,57 @@
 #include "crsf_frametype_rc_channels_packed.h"
 
-uint8_t crsf_default2rc_channels_packed(crsf_default* in_pkt,
-                                        crsf_rc_channels_packed* out_pkt) {
+uint8_t crsf_default2rc_channels_packed(crsf_default* in_pkt, crsf_rc_channels_packed* out_pkt) {
   if (in_pkt->type != CRSF_FRAMETYPE_RC_CHANNELS_PACKED) {
     return 0;
   }
+
   out_pkt->sync = in_pkt->sync;
-  out_pkt->ch[0] = ((in_pkt->payload[0] | in_pkt->payload[1] << 8) & 0x07FF);
-  out_pkt->ch[1] = ((in_pkt->payload[1] >> 3 | in_pkt->payload[2] << 5) & 0x07FF);
-  out_pkt->ch[2] = ((in_pkt->payload[2] >> 6 | in_pkt->payload[3] << 2 | in_pkt->payload[4] << 10) & 0x07FF);
-  out_pkt->ch[3] = ((in_pkt->payload[4] >> 1 | in_pkt->payload[5] << 7) & 0x07FF);
-  out_pkt->ch[4] = ((in_pkt->payload[5] >> 4 | in_pkt->payload[6] << 4) & 0x07FF);
-  out_pkt->ch[5] = ((in_pkt->payload[6] >> 7 | in_pkt->payload[7] << 1 | in_pkt->payload[8] << 9) & 0x07FF);
-  out_pkt->ch[6] = ((in_pkt->payload[8] >> 2 | in_pkt->payload[9] << 6) & 0x07FF);
-  out_pkt->ch[7] = ((in_pkt->payload[9] >> 5 | in_pkt->payload[10] << 3) & 0x07FF);
-  out_pkt->ch[8] = ((in_pkt->payload[11] | in_pkt->payload[12] << 8) & 0x07FF);
-  out_pkt->ch[9] = ((in_pkt->payload[12] >> 3 | in_pkt->payload[13] << 5) & 0x07FF);
-  out_pkt->ch[10] = ((in_pkt->payload[13] >> 6 | in_pkt->payload[14] << 2 | in_pkt->payload[15] << 10) & 0x07FF);
-  out_pkt->ch[11] = ((in_pkt->payload[15] >> 1 | in_pkt->payload[16] << 7) & 0x07FF);
-  out_pkt->ch[12] = ((in_pkt->payload[16] >> 4 | in_pkt->payload[17] << 4) & 0x07FF);
-  out_pkt->ch[13] = ((in_pkt->payload[17] >> 7 | in_pkt->payload[18] << 1 | in_pkt->payload[19] << 9) & 0x07FF);
-  out_pkt->ch[14] = ((in_pkt->payload[19] >> 2 | in_pkt->payload[20] << 6) & 0x07FF);
-  out_pkt->ch[15] = ((in_pkt->payload[20] >> 5 | in_pkt->payload[21] << 3) & 0x07FF);
+  // TODO: ПРОВЕРИТЬ
+  const uint16_t mask = 0x07FF;
+  const uint8_t bits_on_ch = 11;
+  const uint8_t num_of_ch = 16;
+  uint8_t bits_merged = 0;
+  uint32_t read_value = 0;
+  uint8_t i_payload = 0;
+  for (uint8_t i = 0; i < num_of_ch; i++) {
+    while (bits_merged < bits_on_ch) {
+      read_value |= ((uint32_t)in_pkt->payload[i_payload]) << bits_merged;
+      bits_merged += 8;
+      ++i_payload;
+    }
+    out_pkt->ch[i] = (uint16_t)(read_value & mask);
+    read_value >>= bits_on_ch;
+    bits_merged -= bits_on_ch;
+  }
+  return 1;
 }
 
-uint8_t crsf_rc_channels_packed2array(crsf_rc_channels_packed* in_pkt,
-                                      uint8_t* out_pkt) {}
+uint8_t crsf_rc_channels_packed2array(crsf_rc_channels_packed* in_pkt, uint8_t* out_pkt) {
+  out_pkt[0] = in_pkt->sync;
+  out_pkt[1] = 0x18; // LEN 24 byte = 22(16ch, 11 bit) + type + crc8
+  out_pkt[2] = CRSF_FRAMETYPE_RC_CHANNELS_PACKED;
+  // TODO: ПРОВЕРИТЬ
+  const uint16_t mask = 0xFF; // XXX: Нужна ли?
+  const uint8_t bits_on_ch = 11;
+  uint8_t bits_merged = 0;
+  uint32_t read_value = 0;
+  uint8_t i_ch = 0;
+  for (int i = 3; i < 25; i++){
+    while (bits_merged < 8) {
+      read_value |=((uint32_t)in_pkt->ch[i_ch]) << bits_merged; // XXX: Тут не уверен
+      bits_merged += bits_on_ch;
+      ++i_ch;
+      //read_value |= ((uint32_t)in_pkt->payload[i_payload]) << bits_merged;
+    }
+    out_pkt[i] = (uint8_t)(read_value & mask);
+    read_value >>= 8;
+    bits_merged -= 8;
+  }
+
+  out_pkt[25] = crc8_d5_calc(out_pkt + 2, 23);
+  return out_pkt[1] + 2;
+}
+
+uint16_t ticks2us(uint16_t value) { return (value - 992) * 5 / 8 + 1500; }
+
+uint16_t us2ticks(uint16_t value) { return (value - 1500) * 8 / 5 + 992; }

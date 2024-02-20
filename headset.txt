@@ -8,8 +8,7 @@ ea ee - из передатчика в пульт
   00 00 01 54 - Request a phase adjustment to line up channels packet reception with the module's OTA timer
 
 
-c8 08 32 ee ea 10 05 36 26 - задаем model id
-a0 -----------------------------------------------??
+c8 08 32 ee ea 10 05 36 26 a0 - задаем model id
 ea 0d 3a ea ee 10 00 01 04 64 ff ff f6 f0 75
 ea 0d 3a ea ee 10 00 01 04 64 ff ff 1e b0 11
 ee 18 16 ad 68 45 2b 5a d1 8a 56 -----------------??

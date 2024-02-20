@@ -10,4 +10,4 @@
 //#include "crsf_frametype_parameter_read.h"
 //#include "crsf_frametype_parameter_write.h"
 #include "crsf_frametype_command.h"
-//#include "crsf_frametype_radio_id.h"
+#include "crsf_frametype_radio_id.h"

@@ -20,4 +20,7 @@ typedef struct {
 
 uint8_t crsf_parse_char(uint8_t rx_byte, crsf_default* rx_pkt, uint8_t* rx_status);
 
-uint8_t crc8_calc(crsf_default* pkt);
+uint8_t crc8_d5_calc(uint8_t* array, uint8_t len);
+
+// For extended pkt
+uint8_t crc8_ba_calc(uint8_t* array, uint8_t len);
